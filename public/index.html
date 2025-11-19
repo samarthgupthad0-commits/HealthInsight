@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthInsight - Smart Medication Advisor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2b6cb0;
+            --primary-light: #ebf8ff;
+            --secondary: #2c5282;
+            --accent: #f56565;
+            --light: #f7fafc;
+            --dark: #1a202c;
+            --gray: #718096;
+            --light-gray: #e2e8f0;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #e53e3e;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.2s ease-in-out;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            text-decoration: none;
+        }
+        a{
+          text-decoration: none;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0px;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 120px;
+        }
+
+        .logo-text {
+            text-decoration: none;
+            color: var(--dark);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-text a{
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(43, 108, 176, 0.2);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(43, 108, 176, 0.2);
+        }
+
+        .btn a{
+            color: inherit;
+            text-decoration: none;
+
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, #f7fafc, #ebf8ff);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            border: 1px solid var(--light-gray);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 5rem 2rem;
+            background: var(--light);
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 3rem auto 0;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .step h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .step p {
+            color: var(--gray);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            border: 1px solid var(--light-gray);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .testimonial-text::before {
+            content: '"';
+            font-size: 3rem;
+            color: var(--light-gray);
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            line-height: 1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-info h4 {
+            color: var(--dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta p {
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 3rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Auth Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            height: 660px;
+            max-width: 450px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .modal-header {
+            margin-bottom: 1.2rem;
+            text-align: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: var(--gray);
+        }
+
+        .form-group {
+            margin-bottom: 0.9rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.2);
+        }
+
+        .form-footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+        }
+
+        /* New Graphics Section */
+        .graphics-section {
+            padding: 5rem 2rem;
+            background: var(--light);
+        }
+
+        .graphics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .graphic-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .graphic-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .graphic-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .floating-1 {
+            top: 10%;
+            left: 5%;
+            font-size: 8rem;
+            color: var(--primary);
+        }
+
+        .floating-2 {
+            top: 60%;
+            right: 5%;
+            font-size: 6rem;
+            color: var(--accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .steps {
+                flex-direction: column;
+            }
+          }
+        /* Add to your existing CSS */
+          .error-message {
+              color: #e53e3e;
+              font-size: 0.8rem;
+              margin-top: 0.25rem;
+              display: block;
+            }
+
+          .form-control.error {
+              border-color: #e53e3e;
+              box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+            }
+
+          .success-message {
+              background: #48bb78;
+              color: white;
+              padding: 1rem;
+              border-radius: 8px;
+              margin-bottom: 1rem;
+              text-align: center;
+            }
+
+          .error-message-global {
+              background: #e53e3e;
+              color: white;
+              padding: 1rem;
+              border-radius: 8px;
+              margin-bottom: 1rem;
+              text-align: center;
+            }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="#"><span class="logo-text">HealthInsight</span></a>
+        </div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#testimonials">Testimonials</a>
+            <a href="#about">About</a>
+        </div>
+        <div class="auth-buttons">
+            <button class="btn btn-outline" id="login-btn">Sign in</button>
+            <button class="btn btn-primary" id="signup-btn">Sign up</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="floating-element floating-1">
+            <i class="fas fa-heartbeat"></i>
+        </div>
+        <div class="floating-element floating-2">
+            <i class="fas fa-stethoscope"></i>
+        </div>
+        <div class="hero-content">
+            <h1>Smart Medication Recommendations Powered by AI</h1>
+            <p>HealthInsight analyzes your symptoms and health history to provide personalized medication suggestions from trusted medical sources.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" id="hero-cta">
+                    <i class="fas fa-pills"></i> Try It Now
+                </button>
+                <button class="btn btn-outline">
+                    <a href="learnmore.html"><i class="fas fa-info-circle"></i> Learn More</a>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="section-title">
+            <h2>Trusted by Thousands</h2>
+            <p>Join our growing community of health-conscious individuals</p>
+        </div>
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">Medications Analyzed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">User Satisfaction</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Support Available</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>Why Choose HealthInsight</h2>
+            <p>Our platform combines medical expertise with advanced technology to deliver reliable recommendations</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h3>Doctor-Approved</h3>
+                <p>All recommendations are based on established medical guidelines and verified by healthcare professionals.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Safety First</h3>
+                <p>We check for potential drug interactions and contraindications based on your health profile.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3>Comprehensive Database</h3>
+                <p>Access information on thousands of medications from trusted sources like Drugs.com and FDA.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Graphics Section -->
+    <section class="graphics-section">
+        <div class="section-title">
+            <h2>How We Help You</h2>
+            <p>Our comprehensive approach ensures you get the right medication information</p>
+        </div>
+        <div class="graphics-container">
+            <div class="graphic-card">
+                <div class="graphic-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Symptom Analysis</h3>
+                <p>Advanced algorithms analyze your symptoms to identify potential conditions.</p>
+            </div>
+            <div class="graphic-card">
+                <div class="graphic-icon">
+                    <i class="fas fa-capsules"></i>
+                </div>
+                <h3>Medication Matching</h3>
+                <p>Match your condition with appropriate medications based on efficacy and safety.</p>
+            </div>
+            <div class="graphic-card">
+                <div class="graphic-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>Interaction Checker</h3>
+                <p>Identify potential drug interactions with your current medications.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-title">
+            <h2>How HealthInsight Works</h2>
+            <p>Get personalized medication recommendations in just three simple steps</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Describe Your Symptoms</h3>
+                <p>Tell us about your primary symptoms, duration, and severity to help us understand your condition.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Share Your Health History</h3>
+                <p>Provide details about your medical conditions, current medications, and allergies for safer recommendations.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Get Recommendations</h3>
+                <p>Receive personalized medication suggestions with dosage instructions and safety information.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-title">
+            <h2>What Our Users Say</h2>
+            <p>Thousands of people trust HealthInsight for their medication information needs</p>
+        </div>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    HealthInsight helped me identify the right allergy medication when I was suffering from seasonal allergies. The interaction checker prevented me from taking something that would have reacted with my blood pressure meds.
+                </div>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sarah J." class="author-avatar">
+                    <div class="author-info">
+                        <h4>Sarah J.</h4>
+                        <p>New York, NY</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    As a busy mom, I don't always have time to visit the doctor for minor ailments. HealthInsight gives me peace of mind that I'm choosing safe medications for my family.
+                </div>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Maria G." class="author-avatar">
+                    <div class="author-info">
+                        <h4>Maria G.</h4>
+                        <p>Chicago, IL</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    The detailed information about each medication helped me have more informed conversations with my doctor about treatment options for my chronic condition.
+                </div>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Robert T." class="author-avatar">
+                    <div class="author-info">
+                        <h4>Robert T.</h4>
+                        <p>Houston, TX</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <h2>Ready to Find the Right Medication?</h2>
+        <p>Join thousands of users who trust HealthInsight for personalized medication recommendations</p>
+        <button class="btn btn-primary" id="cta-btn">
+            <i class="fas fa-user-plus"></i> Get Started for Free
+        </button>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h3>HealthInsight</h3>
+                <p>Smart medication recommendations powered by AI and medical expertise.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Product</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">API</a></li>
+                    <li><a href="#">Integrations</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Disclaimer</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 HealthInsight. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="modal-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to your HealthInsight account</p>
+            </div>
+            
+            <form id="login-form">
+                <div id="login-messages"></div>
+                
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="your@email.com" required>
+                    <small class="error-message" id="login-email-error"></small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+                    <small class="error-message" id="login-password-error"></small>
+                </div>
+
+                <div class="form-group" style="text-align: right;">
+                    <a href="#" style="color: var(--primary); font-size: 0.9rem;">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" id="login-submit-btn">
+                    <span class="btn-text">Sign In</span>
+                    <span class="btn-loading" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i> Signing In...
+                    </span>
+                </button>
+                
+                <div class="form-footer">
+                    Don't have an account? <a href="#" id="switch-to-signup">Sign up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signup-modal">
+    <div class="modal-content">
+        <button class="close-modal">&times;</button>
+        <div class="modal-header">
+            <h2>Create Your Account</h2>
+            <p>Join HealthInsight to get personalized medication recommendations</p>
+        </div>
+        
+        <form id="signup-form">
+            <div id="form-messages"></div>
+            
+            <div class="form-group">
+                <label for="signup-name">Full Name *</label>
+                <input type="text" id="signup-name" class="form-control" placeholder="John Doe" required>
+                <small class="error-message" id="name-error"></small>
+            </div>
+            
+            <div class="form-group">
+                <label for="signup-email">Email Address *</label>
+                <input type="email" id="signup-email" class="form-control" placeholder="your@email.com" required>
+                <small class="error-message" id="email-error"></small>
+            </div>
+            
+            <div class="form-group">
+                <label for="signup-password">Password *</label>
+                <input type="password" id="signup-password" class="form-control" placeholder="••••••••" required>
+                <small class="error-message" id="password-error"></small>
+            </div>
+            
+            <div class="form-group">
+                <label for="signup-confirm">Confirm Password *</label>
+                <input type="password" id="signup-confirm" class="form-control" placeholder="••••••••" required>
+                <small class="error-message" id="confirm-error"></small>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="signup-submit-btn">
+                <span class="btn-text">Create Account</span>
+                <span class="btn-loading" style="display: none;">
+                    <i class="fas fa-spinner fa-spin"></i> Creating Account...
+                </span>
+            </button>
+            
+            <div class="form-footer">
+                Already have an account? <a href="#" id="switch-to-login">Sign in</a>
+            </div>
+        </form>
+    </div>
+    </div>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+    const API_BASE_URL = 'http://localhost:5000/api';
+    
+    // Get all elements
+    const loginBtn = document.getElementById('login-btn');
+    const signupBtn = document.getElementById('signup-btn');
+    const heroCta = document.getElementById('hero-cta');
+    const ctaBtn = document.getElementById('cta-btn');
+    const loginModal = document.getElementById('login-modal');
+    const signupModal = document.getElementById('signup-modal');
+    const closeModalBtns = document.querySelectorAll('.close-modal');
+    const switchToSignup = document.getElementById('switch-to-signup');
+    const switchToLogin = document.getElementById('switch-to-login');
+    const signupForm = document.getElementById('signup-form');
+    const loginForm = document.getElementById('login-form');
+    const signupSubmitBtn = document.getElementById('signup-submit-btn');
+    const loginSubmitBtn = document.getElementById('login-submit-btn');
+
+    // Utility functions
+    function showMessage(formType, message, type = 'error') {
+        const messagesDiv = document.getElementById(formType + '-messages');
+        messagesDiv.innerHTML = `
+            <div class="${type === 'success' ? 'success-message' : 'error-message-global'}">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                ${message}
+            </div>
+        `;
+    }
+
+    function clearMessages(formType) {
+        const messagesDiv = document.getElementById(formType + '-messages');
+        if (messagesDiv) messagesDiv.innerHTML = '';
+    }
+
+    function showFieldError(fieldId, message) {
+        const field = document.getElementById(fieldId);
+        const errorElement = document.getElementById(fieldId + '-error');
+        
+        if (field) field.classList.add('error');
+        if (errorElement) errorElement.textContent = message;
+    }
+
+    function clearFieldErrors() {
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.textContent = '';
+        });
+        document.querySelectorAll('.form-control').forEach(el => {
+            el.classList.remove('error');
+        });
+    }
+
+    function setLoading(button, loading) {
+        const btnText = button.querySelector('.btn-text');
+        const btnLoading = button.querySelector('.btn-loading');
+        
+        if (loading) {
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
+            button.disabled = true;
+        } else {
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
+            button.disabled = false;
+        }
+    }
+
+    function updateNavigation() {
+        const user = JSON.parse(localStorage.getItem('healthinsight_user') || 'null');
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        
+        if (user) {
+            // User is logged in
+            loginBtn.innerHTML = '<i class="fas fa-user"></i> ' + user.fullName;
+            loginBtn.classList.remove('btn-outline');
+            loginBtn.classList.add('btn-primary');
+            signupBtn.style.display = 'none';
+            
+            // If user is already logged in, redirect to main.html
+            if (window.location.pathname.endsWith('index.html') || 
+                window.location.pathname === '/' || 
+                window.location.pathname.endsWith('/')) {
+                setTimeout(() => {
+                    window.location.href = 'main.html';
+                }, 1000);
+            }
+        } else {
+            // User is logged out
+            loginBtn.innerHTML = 'Sign in';
+            loginBtn.classList.remove('btn-primary');
+            loginBtn.classList.add('btn-outline');
+            signupBtn.style.display = 'inline-block';
+        }
+    }
+
+    // Redirect to main.html function
+    function redirectToMain(user) {
+        console.log('🔄 Redirecting to main.html...');
+        showMessage('login', `✅ Welcome back, ${user.fullName}! Redirecting...`, 'success');
+        
+        setTimeout(() => {
+            window.location.href = 'main.html';
+        }, 1500);
+    }
+
+    // Modal functions
+    function openLoginModal() {
+        loginModal.style.display = 'flex';
+        signupModal.style.display = 'none';
+        document.body.style.overflow = 'hidden';
+        clearMessages('login');
+        clearFieldErrors();
+    }
+
+    function openSignupModal() {
+        signupModal.style.display = 'flex';
+        loginModal.style.display = 'none';
+        document.body.style.overflow = 'hidden';
+        clearMessages('signup');
+        clearFieldErrors();
+    }
+
+    function closeModals() {
+        loginModal.style.display = 'none';
+        signupModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        clearMessages('login');
+        clearMessages('signup');
+        clearFieldErrors();
+    }
+
+    // Event listeners for modals
+    loginBtn.addEventListener('click', function() {
+        const user = JSON.parse(localStorage.getItem('healthinsight_user') || 'null');
+        if (user) {
+            // User is logged in - show profile or logout
+            if (confirm('Do you want to logout?')) {
+                localStorage.removeItem('healthinsight_user');
+                updateNavigation();
+                alert('Logged out successfully!');
+            }
+        } else {
+            // User is not logged in - open login modal
+            openLoginModal();
+        }
+    });
+
+    signupBtn.addEventListener('click', openSignupModal);
+    heroCta.addEventListener('click', openSignupModal);
+    ctaBtn.addEventListener('click', openSignupModal);
+    
+    closeModalBtns.forEach(btn => {
+        btn.addEventListener('click', closeModals);
+    });
+
+    switchToSignup.addEventListener('click', function(e) {
+        e.preventDefault();
+        openSignupModal();
+    });
+
+    switchToLogin.addEventListener('click', function(e) {
+        e.preventDefault();
+        openLoginModal();
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === loginModal || e.target === signupModal) {
+            closeModals();
+        }
+    });
+
+    // SIGNUP FORM SUBMISSION
+    signupForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        clearMessages('signup');
+        clearFieldErrors();
+        setLoading(signupSubmitBtn, true);
+
+        const formData = {
+            fullName: document.getElementById('signup-name').value.trim(),
+            email: document.getElementById('signup-email').value.trim(),
+            password: document.getElementById('signup-password').value,
+            confirmPassword: document.getElementById('signup-confirm').value
+        };
+
+        // Validation
+        let isValid = true;
+        if (!formData.fullName) {
+            showFieldError('signup-name', 'Full name is required');
+            isValid = false;
+        }
+        if (!formData.email) {
+            showFieldError('signup-email', 'Email is required');
+            isValid = false;
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            showFieldError('signup-email', 'Please enter a valid email address');
+            isValid = false;
+        }
+        if (!formData.password) {
+            showFieldError('signup-password', 'Password is required');
+            isValid = false;
+        } else if (formData.password.length < 6) {
+            showFieldError('signup-password', 'Password must be at least 6 characters');
+            isValid = false;
+        }
+        if (!formData.confirmPassword) {
+            showFieldError('signup-confirm', 'Please confirm your password');
+            isValid = false;
+        } else if (formData.password !== formData.confirmPassword) {
+            showFieldError('signup-confirm', 'Passwords do not match');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            setLoading(signupSubmitBtn, false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showMessage('signup', '🎉 Account created successfully! Redirecting...', 'success');
+                localStorage.setItem('healthinsight_user', JSON.stringify(data.user));
+                
+                // Redirect to main.html after successful signup
+                setTimeout(() => {
+                    window.location.href = 'main.html';
+                }, 2000);
+                
+            } else {
+                showMessage('signup', data.message, 'error');
+                if (data.message.includes('email')) {
+                    showFieldError('signup-email', data.message);
+                }
+            }
+        } catch (error) {
+            showMessage('signup', 'Network error. Please check if the backend server is running.', 'error');
+        } finally {
+            setLoading(signupSubmitBtn, false);
+        }
+    });
+
+    // LOGIN FORM SUBMISSION
+    loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        console.log('🔐 Login form submitted');
+        
+        clearMessages('login');
+        clearFieldErrors();
+        setLoading(loginSubmitBtn, true);
+
+        const formData = {
+            email: document.getElementById('login-email').value.trim(),
+            password: document.getElementById('login-password').value
+        };
+
+        // Basic validation
+        let isValid = true;
+        if (!formData.email) {
+            showFieldError('login-email', 'Email is required');
+            isValid = false;
+        }
+        if (!formData.password) {
+            showFieldError('login-password', 'Password is required');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            setLoading(loginSubmitBtn, false);
+            return;
+        }
+
+        try {
+            console.log('📤 Sending login request...');
+            
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+            console.log('📥 Login response:', data);
+
+            if (data.success) {
+                // Store user data
+                localStorage.setItem('healthinsight_user', JSON.stringify(data.user));
+                
+                // Update navigation
+                updateNavigation();
+                
+                // Redirect to main.html
+                redirectToMain(data.user);
+                
+            } else {
+                showMessage('login', data.message, 'error');
+                if (data.message.includes('email') || data.message.includes('password')) {
+                    showFieldError('login-email', ' ');
+                    showFieldError('login-password', 'Invalid credentials');
+                }
+            }
+
+        } catch (error) {
+            console.error('❌ Login error:', error);
+            showMessage('login', 'Network error. Please try again.', 'error');
+        } finally {
+            setLoading(loginSubmitBtn, false);
+        }
+    });
+
+    // Initialize navigation on page load
+    updateNavigation();
+
+    // Keep your existing smooth scrolling and stats animation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    function animateStats() {
+        const statNumbers = document.querySelectorAll('.stat-number');
+        statNumbers.forEach(stat => {
+            const finalValue = parseInt(stat.textContent);
+            let currentValue = 0;
+            const increment = finalValue / 50;
+            const timer = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= finalValue) {
+                    stat.textContent = finalValue + (stat.textContent.includes('%') ? '%' : '+');
+                    clearInterval(timer);
+                } else {
+                    stat.textContent = Math.floor(currentValue) + (stat.textContent.includes('%') ? '%' : '+');
+                }
+            }, 30);
+        });
+    }
+
+    const statsSection = document.querySelector('.stats-section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateStats();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    if (statsSection) {
+        observer.observe(statsSection);
+    }
+
+    console.log('✅ HealthInsight frontend loaded successfully');
+});
+    </script>
+</body>
+</html>
