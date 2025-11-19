@@ -1,69 +1,34 @@
-// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
-const MONGODB_URI = 'mongodb://localhost:27017/healthinsight';
-
-mongoose.connect(MONGODB_URI)
-    .then(() => console.log('✅ MongoDB Connected'))
-    .catch(err => console.log('❌ MongoDB Error:', err.message));
-
 // Routes
-app.get('/', (req, res) => {
-    res.json({ 
-        message: 'HealthInsight API is running!',
-        database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
-    });
-});
+app.use('/api/auth', require('./routes/authRoutes'));
 
-// Health check
+// Health check route
 app.get('/api/health', (req, res) => {
-    res.json({
-        status: 'OK',
-        server: 'Running',
-        database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
-        timestamp: new Date().toISOString()
-    });
+  res.json({ 
+    message: 'HealthInsight Backend is running!',
+    timestamp: new Date().toISOString()
+  });
 });
 
-// Debug route to see all users
-app.get('/api/debug/users', async (req, res) => {
-    try {
-        const User = require('./models/User');
-        const users = await User.find().sort({ createdAt: -1 });
-        
-        console.log('📊 Total users in database:', users.length);
-        
-        res.json({
-            success: true,
-            message: `Found ${users.length} users`,
-            users: users.map(user => ({
-                id: user._id,
-                name: user.fullName,
-                email: user.email,
-                created: user.createdAt,
-                lastLogin: user.lastLogin
-            }))
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            error: error.message
-        });
-    }
-});
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/healthinsight', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('✅ Connected to MongoDB'))
+.catch(err => console.error('❌ MongoDB connection error:', err));
 
-// Auth routes
-app.use('/api/auth', require('./routes/auth'));
-
-app.listen(5000, () => {
-    console.log('Server running on http://localhost:5000');
-    console.log(' Health check: http://localhost:5000/api/health');
-    console.log('Debug users: http://localhost:5000/api/debug/users');
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });

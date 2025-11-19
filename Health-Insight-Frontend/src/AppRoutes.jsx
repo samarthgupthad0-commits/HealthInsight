@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import LearnMore from './pages/LearnMore';
+import MedicationFinder from './pages/MedicationFinder';
 
 const AppRoutes = () => {
   return (
@@ -10,7 +11,8 @@ const AppRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/learnmore" element={<LearnMore />} />
-      <Route path="/main" element={<Home />} /> {/* You can create a separate Main page later */}
+      <Route path="/medication-finder" element={<MedicationFinder />} />
+      <Route path="/main" element={<MedicationFinder />} /> {/* Or keep as Home if you prefer */}
     </Routes>
   );
 };

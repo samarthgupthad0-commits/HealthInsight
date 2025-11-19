@@ -29,6 +29,9 @@ const Navbar = ({ onOpenLogin, onOpenSignup }) => {
         <a href="#testimonials">Testimonials</a>
         <a href="#about">About</a>
       </div>
+      <Link to="/medication-finder" className="nav-link">
+  Medication Finder
+</Link>
       <div className="auth-buttons">
         {user ? (
           <>
