@@ -6,11 +6,18 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login' }) => {
   const [mode, setMode] = useState(initialMode);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
+  fullName: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  // Add default values for other fields
+  gender: '',
+  bloodGroup: '',
+  smoking: '',
+  alcohol: '',
+  exercise: '',
+  diet: ''
+});
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
 

@@ -46,12 +46,18 @@ exports.register = async (req, res) => {
       });
     }
 
-    // Create user
-    const user = await User.create({
-      fullName,
-      email,
-      password
-    });
+    // In the register function, update the user creation:
+const user = await User.create({
+  fullName,
+  email,
+  password,
+  gender: '', // Add default empty values for required fields
+  bloodGroup: '',
+  smoking: '',
+  alcohol: '',
+  exercise: '',
+  diet: ''
+});
 
     // Generate token
     const token = generateToken(user._id);
@@ -65,13 +71,28 @@ exports.register = async (req, res) => {
         email: user.email,
         phone: user.phone,
         dateOfBirth: user.dateOfBirth,
+        gender: user.gender,
+        bloodGroup: user.bloodGroup,
+        emergencyContact: user.emergencyContact,
+        emergencyPhone: user.emergencyPhone,
         address: user.address,
+        height: user.height,
+        weight: user.weight,
+        bloodPressure: user.bloodPressure,
         medicalConditions: user.medicalConditions,
         currentMedications: user.currentMedications,
         allergies: user.allergies,
-        createdAt: user.createdAt
+        surgeries: user.surgeries,
+        familyHistory: user.familyHistory,
+        smoking: user.smoking,
+        alcohol: user.alcohol,
+        exercise: user.exercise,
+        diet: user.diet,
+        sleepHours: user.sleepHours,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
       },
-      token
+      token // MAKE SURE THIS IS INCLUDED
     });
 
   } catch (error) {
@@ -111,6 +132,9 @@ exports.login = async (req, res) => {
     // Generate token
     const token = generateToken(user._id);
 
+    // Update last login
+    await user.updateLastLogin();
+
     res.json({
       success: true,
       message: 'Login successful',
@@ -120,13 +144,28 @@ exports.login = async (req, res) => {
         email: user.email,
         phone: user.phone,
         dateOfBirth: user.dateOfBirth,
+        gender: user.gender,
+        bloodGroup: user.bloodGroup,
+        emergencyContact: user.emergencyContact,
+        emergencyPhone: user.emergencyPhone,
         address: user.address,
+        height: user.height,
+        weight: user.weight,
+        bloodPressure: user.bloodPressure,
         medicalConditions: user.medicalConditions,
         currentMedications: user.currentMedications,
         allergies: user.allergies,
-        createdAt: user.createdAt
+        surgeries: user.surgeries,
+        familyHistory: user.familyHistory,
+        smoking: user.smoking,
+        alcohol: user.alcohol,
+        exercise: user.exercise,
+        diet: user.diet,
+        sleepHours: user.sleepHours,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
       },
-      token
+      token // MAKE SURE THIS IS INCLUDED
     });
 
   } catch (error) {
@@ -153,11 +192,26 @@ exports.getProfile = async (req, res) => {
         email: user.email,
         phone: user.phone,
         dateOfBirth: user.dateOfBirth,
+        gender: user.gender,
+        bloodGroup: user.bloodGroup,
+        emergencyContact: user.emergencyContact,
+        emergencyPhone: user.emergencyPhone,
         address: user.address,
+        height: user.height,
+        weight: user.weight,
+        bloodPressure: user.bloodPressure,
         medicalConditions: user.medicalConditions,
         currentMedications: user.currentMedications,
         allergies: user.allergies,
-        createdAt: user.createdAt
+        surgeries: user.surgeries,
+        familyHistory: user.familyHistory,
+        smoking: user.smoking,
+        alcohol: user.alcohol,
+        exercise: user.exercise,
+        diet: user.diet,
+        sleepHours: user.sleepHours,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
       }
     });
 
@@ -176,53 +230,93 @@ exports.getProfile = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const {
-      fullName,
-      email,
-      phone,
-      dateOfBirth,
-      address,
-      medicalConditions,
-      currentMedications,
-      allergies
+      fullName, phone, dateOfBirth, gender, bloodGroup,
+      emergencyContact, emergencyPhone, address, height,
+      weight, bloodPressure, medicalConditions, currentMedications,
+      allergies, surgeries, familyHistory, smoking, alcohol,
+      exercise, diet, sleepHours
     } = req.body;
 
-    const updatedUser = await User.findByIdAndUpdate(
-      req.user.id,
-      {
-        fullName,
-        email,
-        phone,
-        dateOfBirth,
-        address,
-        medicalConditions,
-        currentMedications,
-        allergies
-      },
-      {
-        new: true,
-        runValidators: true
+    // Find user and update
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Update user fields
+    const updateData = {
+      fullName, phone, dateOfBirth, gender, bloodGroup,
+      emergencyContact, emergencyPhone, address, height,
+      weight, bloodPressure, medicalConditions, currentMedications,
+      allergies, surgeries, familyHistory, smoking, alcohol,
+      exercise, diet, sleepHours
+    };
+
+    // Remove undefined fields
+    Object.keys(updateData).forEach(key => {
+      if (updateData[key] !== undefined) {
+        user[key] = updateData[key];
       }
-    );
+    });
+
+    await user.save();
 
     res.json({
       success: true,
       message: 'Profile updated successfully',
       user: {
-        id: updatedUser._id,
-        fullName: updatedUser.fullName,
-        email: updatedUser.email,
-        phone: updatedUser.phone,
-        dateOfBirth: updatedUser.dateOfBirth,
-        address: updatedUser.address,
-        medicalConditions: updatedUser.medicalConditions,
-        currentMedications: updatedUser.currentMedications,
-        allergies: updatedUser.allergies,
-        createdAt: updatedUser.createdAt
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone,
+        dateOfBirth: user.dateOfBirth,
+        gender: user.gender,
+        bloodGroup: user.bloodGroup,
+        emergencyContact: user.emergencyContact,
+        emergencyPhone: user.emergencyPhone,
+        address: user.address,
+        height: user.height,
+        weight: user.weight,
+        bloodPressure: user.bloodPressure,
+        medicalConditions: user.medicalConditions,
+        currentMedications: user.currentMedications,
+        allergies: user.allergies,
+        surgeries: user.surgeries,
+        familyHistory: user.familyHistory,
+        smoking: user.smoking,
+        alcohol: user.alcohol,
+        exercise: user.exercise,
+        diet: user.diet,
+        sleepHours: user.sleepHours,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
       }
     });
 
   } catch (error) {
     console.error('Update profile error:', error);
+    
+    // Handle duplicate email error
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email already exists'
+      });
+    }
+
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        success: false,
+        message: messages.join(', ')
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: 'Server error while updating profile'

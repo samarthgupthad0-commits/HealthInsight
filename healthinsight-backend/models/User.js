@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
+  // Authentication
   fullName: {
     type: String,
     required: [true, 'Full name is required'],
@@ -22,6 +23,8 @@ const userSchema = new mongoose.Schema({
     minlength: [6, 'Password must be at least 6 characters'],
     select: false
   },
+
+  // Personal Information
   phone: {
     type: String,
     default: ''
@@ -30,10 +33,44 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
+  gender: {
+    type: String,
+    enum: ['', 'male', 'female', 'other', 'prefer-not-to-say'],
+    default: ''
+  },
+  bloodGroup: {
+    type: String,
+    enum: ['', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+    default: ''
+  },
+  emergencyContact: {
+    type: String,
+    default: ''
+  },
+  emergencyPhone: {
+    type: String,
+    default: ''
+  },
   address: {
     type: String,
     default: ''
   },
+
+  // Vital Statistics
+  height: {
+    type: String,
+    default: ''
+  },
+  weight: {
+    type: String,
+    default: ''
+  },
+  bloodPressure: {
+    type: String,
+    default: ''
+  },
+
+  // Medical History
   medicalConditions: {
     type: String,
     default: ''
@@ -45,7 +82,50 @@ const userSchema = new mongoose.Schema({
   allergies: {
     type: String,
     default: ''
+  },
+  surgeries: {
+    type: String,
+    default: ''
+  },
+  familyHistory: {
+    type: String,
+    default: ''
+  },
+
+  // Lifestyle Information
+  smoking: {
+    type: String,
+    enum: ['', 'never', 'former', 'current'],
+    default: ''
+  },
+  alcohol: {
+    type: String,
+    enum: ['', 'never', 'occasional', 'regular'],
+    default: ''
+  },
+  exercise: {
+    type: String,
+    enum: ['', 'sedentary', 'light', 'moderate', 'active'],
+    default: ''
+  },
+  diet: {
+    type: String,
+    enum: ['', 'omnivore', 'vegetarian', 'vegan', 'pescatarian', 'keto', 'other'],
+    default: ''
+  },
+  sleepHours: {
+    type: Number,
+    min: 0,
+    max: 24,
+    default: null
+  },
+
+  // Timestamps
+  lastLogin: {
+    type: Date,
+    default: Date.now
   }
+
 }, {
   timestamps: true
 });
@@ -60,6 +140,12 @@ userSchema.pre('save', async function(next) {
 // Compare password method
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+// Update lastLogin on login
+userSchema.methods.updateLastLogin = async function() {
+  this.lastLogin = Date.now();
+  return this.save({ validateBeforeSave: false });
 };
 
 module.exports = mongoose.model('User', userSchema);
