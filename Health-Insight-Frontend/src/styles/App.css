@@ -1338,13 +1338,46 @@ body {
 
 /* Print styles */
 @media print {
+  @page {
+    margin: 16mm;
+  }
+
+  body {
+    background: white;
+  }
+
+  .medication-finder header,
+  .medication-finder .progress-bar,
+  .medication-finder footer,
+  .medication-finder .btn-group,
   .medication-finder .btn,
   .medication-finder .profile-btn {
     display: none !important;
   }
-  
+
+  .medication-finder .container {
+    max-width: none;
+    padding: 0;
+  }
+
   .medication-finder .form-section {
     box-shadow: none;
-    border: 1px solid #ddd;
+    border: 0;
+    padding: 0;
+  }
+
+  .medication-finder .form-section h2 {
+    margin-top: 0;
+  }
+
+  .medication-finder .medication-card,
+  .medication-finder .disclaimer {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+
+  .medication-finder a {
+    color: #000 !important;
+    text-decoration: none;
   }
 }

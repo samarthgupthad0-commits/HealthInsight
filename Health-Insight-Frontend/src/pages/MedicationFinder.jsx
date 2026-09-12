@@ -106,6 +106,14 @@ const MedicationFinder = () => {
           formData.conditions
         );
         setMedicationResults(results);
+        const savedHistory = JSON.parse(localStorage.getItem('healthinsight_history') || '[]');
+        savedHistory.unshift({
+          id: Date.now(),
+          symptom: formData.primarySymptom,
+          medications: results.map(result => result.name),
+          createdAt: new Date().toISOString()
+        });
+        localStorage.setItem('healthinsight_history', JSON.stringify(savedHistory.slice(0, 20)));
         setIsLoading(false);
       }, 2000);
     }
@@ -132,25 +140,108 @@ const MedicationFinder = () => {
   };
 
   const getMedicationsForSymptoms = (primarySymptom, additionalSymptoms, conditions) => {
-    // Your existing medication data logic here
-    const allMedications = [];
-
-    if (primarySymptom === 'headache') {
-      allMedications.push({
+    const medicationBySymptom = {
+      headache: {
         name: 'Acetaminophen (Tylenol)',
-        type: 'Over-the-counter',
         purpose: 'Pain relief and fever reduction',
         dosage: '500-1000mg every 4-6 hours as needed (max 4000mg/day)',
-        sideEffects: ['Liver damage (if overdosed)', 'Allergic reactions'],
+        sideEffects: ['Liver damage if overdosed', 'Allergic reactions'],
         warnings: conditions.includes('liver disease') ? ['Not recommended for people with liver disease'] : [],
         interactions: ['Alcohol', 'Warfarin'],
         link: 'https://www.drugs.com/acetaminophen.html'
-      });
+      },
+      fever: {
+        name: 'Acetaminophen (Tylenol)',
+        purpose: 'Fever reduction and relief of minor aches',
+        dosage: '500-1000mg every 4-6 hours as needed (max 4000mg/day)',
+        sideEffects: ['Liver damage if overdosed', 'Allergic reactions'],
+        warnings: conditions.includes('liver disease') ? ['Not recommended for people with liver disease'] : [],
+        interactions: ['Alcohol', 'Warfarin'],
+        link: 'https://www.drugs.com/acetaminophen.html'
+      },
+      cough: {
+        name: 'Dextromethorphan',
+        purpose: 'Temporary relief of cough',
+        dosage: 'Follow the product label and do not exceed the recommended dose',
+        sideEffects: ['Drowsiness', 'Dizziness', 'Nausea'],
+        warnings: [],
+        interactions: ['MAO inhibitors', 'Some antidepressants'],
+        link: 'https://www.drugs.com/dextromethorphan.html'
+      },
+      'sore throat': {
+        name: 'Benzocaine Lozenges',
+        purpose: 'Temporary relief of minor sore throat pain',
+        dosage: 'Use as directed on the product label',
+        sideEffects: ['Mouth irritation', 'Allergic reactions'],
+        warnings: [],
+        interactions: [],
+        link: 'https://www.drugs.com/mtm/benzocaine-oral.html'
+      },
+      'nasal congestion': {
+        name: 'Pseudoephedrine',
+        purpose: 'Temporary relief of nasal congestion',
+        dosage: 'Follow the product label and do not exceed the recommended dose',
+        sideEffects: ['Nervousness', 'Insomnia', 'Increased blood pressure'],
+        warnings: conditions.includes('high blood pressure') ? ['Ask a healthcare provider before use because it may raise blood pressure'] : [],
+        interactions: ['MAO inhibitors'],
+        link: 'https://www.drugs.com/pseudoephedrine.html'
+      },
+      'body aches': {
+        name: 'Ibuprofen (Advil, Motrin)',
+        purpose: 'Temporary relief of minor muscle and body aches',
+        dosage: '200-400mg every 4-6 hours as needed; follow the product label',
+        sideEffects: ['Stomach upset', 'Heartburn', 'Allergic reactions'],
+        warnings: conditions.includes('kidney disease') || conditions.includes('heart disease') ? ['Ask a healthcare provider before use because of your health history'] : [],
+        interactions: ['Blood thinners', 'Aspirin'],
+        link: 'https://www.drugs.com/ibuprofen.html'
+      },
+      heartburn: {
+        name: 'Calcium Carbonate (Tums)',
+        purpose: 'Relief of occasional heartburn and acid indigestion',
+        dosage: 'Chew tablets as directed on the product label',
+        sideEffects: ['Constipation', 'Stomach discomfort'],
+        warnings: conditions.includes('kidney disease') ? ['Ask a healthcare provider before use because of your kidney disease'] : [],
+        interactions: ['Some antibiotics', 'Iron supplements'],
+        link: 'https://www.drugs.com/mtm/calcium-carbonate.html'
+      },
+      diarrhea: {
+        name: 'Loperamide (Imodium)',
+        purpose: 'Control of occasional diarrhea',
+        dosage: 'Follow the product label and do not exceed the recommended dose',
+        sideEffects: ['Constipation', 'Stomach cramps', 'Dizziness'],
+        warnings: [],
+        interactions: [],
+        link: 'https://www.drugs.com/loperamide.html'
+      },
+      constipation: {
+        name: 'Polyethylene Glycol 3350 (MiraLAX)',
+        purpose: 'Relief of occasional constipation',
+        dosage: 'Dissolve the label-directed dose in a beverage once daily',
+        sideEffects: ['Bloating', 'Gas', 'Stomach cramps'],
+        warnings: [],
+        interactions: [],
+        link: 'https://www.drugs.com/mtm/polyethylene-glycol-3350.html'
+      },
+      rash: {
+        name: 'Hydrocortisone 1% Cream',
+        purpose: 'Temporary relief of minor skin irritation and itching',
+        dosage: 'Apply a thin layer as directed on the product label',
+        sideEffects: ['Skin irritation', 'Dryness'],
+        warnings: [],
+        interactions: [],
+        link: 'https://www.drugs.com/mtm/hydrocortisone-topical.html'
+      }
+    };
+
+    const medication = medicationBySymptom[primarySymptom];
+    if (!medication) {
+      return [];
     }
 
-    // Add more medication logic as needed...
-
-    return allMedications;
+    return [{
+      ...medication,
+      type: 'Over-the-counter'
+    }];
   };
 
   return (

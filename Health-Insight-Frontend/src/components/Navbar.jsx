@@ -32,6 +32,9 @@ const Navbar = ({ onOpenLogin, onOpenSignup }) => {
       <Link to="/medication-finder" className="nav-link">
   Medication Finder
 </Link>
+      <Link to="/history" className="nav-link">
+        History
+      </Link>
       <div className="auth-buttons">
         {user ? (
           <>

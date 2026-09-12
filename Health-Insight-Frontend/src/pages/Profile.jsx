@@ -222,6 +222,7 @@ const Profile = () => {
               <button 
                 className="btn btn-outline" 
                 style={{ width: '100%', marginBottom: '0.5rem' }}
+                onClick={() => navigate('/history')}
               >
                 <i className="fas fa-history"></i> Consultation History
               </button>
