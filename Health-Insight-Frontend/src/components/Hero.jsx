@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = ({ onOpenSignup }) => {
+  const navigate = useNavigate();
+
   return (
     <section className="hero">
       <div className="floating-element floating-1">
@@ -16,7 +19,7 @@ const Hero = ({ onOpenSignup }) => {
           <button className="btn btn-primary" onClick={onOpenSignup}>
             <i className="fas fa-pills"></i> Try It Now
           </button>
-          <button className="btn btn-outline">
+          <button className="btn btn-outline" onClick={() => navigate('/learnmore')}>
             <i className="fas fa-info-circle"></i> Learn More
           </button>
         </div>

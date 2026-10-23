@@ -1,18 +1,31 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = ({ onOpenLogin, onOpenSignup }) => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-  const handleAuthClick = () => {
-    if (user) {
-      if (window.confirm('Do you want to logout?')) {
-        logout();
-        alert('Logged out successfully!');
-      }
-    } else {
+  const handleLogin = () => {
+    if (onOpenLogin) {
       onOpenLogin();
+    } else {
+      navigate('/login');
+    }
+  };
+
+  const handleSignup = () => {
+    if (onOpenSignup) {
+      onOpenSignup();
+    } else {
+      navigate('/login');
+    }
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Do you want to logout?')) {
+      logout();
+      navigate('/');
     }
   };
 
@@ -24,14 +37,13 @@ const Navbar = ({ onOpenLogin, onOpenSignup }) => {
         </Link>
       </div>
       <div className="nav-links">
-        <a href="#features">Features</a>
-        <a href="#how-it-works">How It Works</a>
-        <a href="#testimonials">Testimonials</a>
-        <a href="#about">About</a>
+        <a href="/#features">Features</a>
+        <a href="/#how-it-works">How It Works</a>
+        <a href="/#testimonials">Testimonials</a>
       </div>
       <Link to="/medication-finder" className="nav-link">
-  Medication Finder
-</Link>
+        Medication Finder
+      </Link>
       <Link to="/history" className="nav-link">
         History
       </Link>
@@ -41,16 +53,16 @@ const Navbar = ({ onOpenLogin, onOpenSignup }) => {
             <Link to="/profile" className="btn btn-primary">
               <i className="fas fa-user"></i> {user.fullName}
             </Link>
-            <button className="btn btn-outline" onClick={handleAuthClick}>
+            <button className="btn btn-outline" onClick={handleLogout}>
               <i className="fas fa-sign-out-alt"></i> Logout
             </button>
           </>
         ) : (
           <>
-            <button className="btn btn-outline" onClick={onOpenLogin}>
+            <button className="btn btn-outline" onClick={handleLogin}>
               Sign in
             </button>
-            <button className="btn btn-primary" onClick={onOpenSignup}>
+            <button className="btn btn-primary" onClick={handleSignup}>
               Sign up
             </button>
           </>

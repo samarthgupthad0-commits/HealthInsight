@@ -3,9 +3,10 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { authAPI } from '../services/api';
 
 const Profile = () => {
-  const { user, updateUser } = useAuth();
+  const { user, token, updateUser } = useAuth();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -81,33 +82,22 @@ const Profile = () => {
 
   const handleSave = async () => {
     try {
-      const token = localStorage.getItem('healthinsight_token');
+      const authToken = token || localStorage.getItem('healthinsight_token');
       
-      if (!token) {
+      if (!authToken) {
         alert('Please login again to update your profile.');
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/auth/profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
+      const data = await authAPI.updateProfile(formData, authToken);
 
       if (data.success) {
-        // Update user data in context and localStorage
+        // Update user data in context (which also updates localStorage)
         updateUser(data.user);
-        localStorage.setItem('healthinsight_user', JSON.stringify(data.user));
-        
         setIsEditing(false);
         alert('Profile updated successfully!');
       } else {
-        alert('Failed to update profile: ' + data.message);
+        alert('Failed to update profile: ' + (data.message || 'Unknown error'));
       }
     } catch (error) {
       console.error('Error updating profile:', error);

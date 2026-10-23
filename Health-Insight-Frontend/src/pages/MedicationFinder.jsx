@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { consultationAPI } from '../services/api';
 
 const MedicationFinder = () => {
-  const { user } = useAuth();
+  const { token } = useAuth();
   const navigate = useNavigate();
   
   const [currentSection, setCurrentSection] = useState(0);
@@ -98,24 +99,49 @@ const MedicationFinder = () => {
       setIsLoading(true);
       navigateToSection(2);
       
-      // Simulate API call
-      setTimeout(() => {
+      // Simulate recommendation retrieval
+      setTimeout(async () => {
         const results = getMedicationsForSymptoms(
           formData.primarySymptom, 
           formData.additionalSymptoms, 
           formData.conditions
         );
         setMedicationResults(results);
+
+        // Save to local storage for immediate/offline access
         const savedHistory = JSON.parse(localStorage.getItem('healthinsight_history') || '[]');
-        savedHistory.unshift({
+        const newEntry = {
           id: Date.now(),
           symptom: formData.primarySymptom,
           medications: results.map(result => result.name),
           createdAt: new Date().toISOString()
-        });
+        };
+        savedHistory.unshift(newEntry);
         localStorage.setItem('healthinsight_history', JSON.stringify(savedHistory.slice(0, 20)));
+
+        // If authenticated, sync with backend database
+        const authToken = token || localStorage.getItem('healthinsight_token');
+        if (authToken) {
+          try {
+            await consultationAPI.saveConsultation({
+              primarySymptom: formData.primarySymptom,
+              additionalSymptoms: formData.additionalSymptoms,
+              symptomDuration: formData.symptomDuration,
+              symptomSeverity: formData.symptomSeverity,
+              age: formData.age,
+              gender: formData.gender,
+              conditions: formData.conditions,
+              currentMeds: formData.currentMeds,
+              allergies: formData.allergies,
+              medications: results
+            }, authToken);
+          } catch (err) {
+            console.error('Failed to sync consultation with backend:', err);
+          }
+        }
+
         setIsLoading(false);
-      }, 2000);
+      }, 1500);
     }
   };
 
@@ -137,6 +163,64 @@ const MedicationFinder = () => {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleDownloadPrintableCopy = () => {
+    const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[character]);
+    const details = medicationResults.length
+      ? medicationResults.map((medication) => `
+        <article class="medication">
+          <h2>${escapeHtml(medication.name)}</h2>
+          <p><strong>Type:</strong> ${escapeHtml(medication.type)}</p>
+          <p><strong>Purpose:</strong> ${escapeHtml(medication.purpose)}</p>
+          <p><strong>Dosage:</strong> ${escapeHtml(medication.dosage)}</p>
+          <p><strong>Side effects:</strong> ${escapeHtml(medication.sideEffects.join(', '))}</p>
+          ${medication.interactions?.length ? `<p><strong>Interactions:</strong> ${escapeHtml(medication.interactions.join(', '))}</p>` : ''}
+          ${medication.warnings?.length ? `<p><strong>Warnings:</strong> ${escapeHtml(medication.warnings.join(' '))}</p>` : ''}
+          <p><strong>More information:</strong> <a href="${escapeHtml(medication.link)}">${escapeHtml(medication.link)}</a></p>
+        </article>
+      `).join('')
+      : '<p>No specific medication recommendations were found. Consider consulting a healthcare provider for personalized advice.</p>';
+    const report = `<!doctype html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>HealthInsight Medication Recommendations</title>
+          <style>
+            body { max-width: 800px; margin: 40px auto; padding: 0 24px; color: #222; font: 16px/1.5 Arial, sans-serif; }
+            h1 { color: #064f8c; }
+            .medication { margin: 24px 0; padding: 16px; border: 1px solid #bbb; break-inside: avoid; }
+            .disclaimer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #bbb; }
+            @media print { body { margin: 0 auto; } }
+          </style>
+        </head>
+        <body>
+          <h1>HealthInsight Medication Recommendations</h1>
+          <p><strong>Symptom:</strong> ${escapeHtml(formData.primarySymptom || 'Not specified')}</p>
+          <p><strong>Generated:</strong> ${escapeHtml(new Date().toLocaleString())}</p>
+          ${details}
+          <section class="disclaimer">
+            <p><strong>Disclaimer:</strong> These recommendations are for informational purposes only and do not constitute medical advice. Consult a qualified healthcare provider before starting any medication.</p>
+            <p>Recommendations are simulated for demonstration purposes.</p>
+          </section>
+        </body>
+      </html>`;
+    const file = new Blob([report], { type: 'text/html;charset=utf-8' });
+    const fileUrl = URL.createObjectURL(file);
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = `HealthInsight-Recommendations-${new Date().toISOString().slice(0, 10)}.html`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(fileUrl), 1000);
   };
 
   const getMedicationsForSymptoms = (primarySymptom, additionalSymptoms, conditions) => {
@@ -544,6 +628,9 @@ const MedicationFinder = () => {
               </button>
               <button type="button" className="btn btn-primary" onClick={handlePrint}>
                 Print Recommendations
+              </button>
+              <button type="button" className="btn btn-outline" onClick={handleDownloadPrintableCopy}>
+                Download Printable Copy
               </button>
             </div>
           </div>

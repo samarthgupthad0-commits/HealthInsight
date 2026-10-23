@@ -118,7 +118,7 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login' }) => {
             : '🎉 Account created successfully! Redirecting...'
         });
         
-        login(response.user);
+        login(response.user, response.token);
         
         setTimeout(() => {
           handleClose();
@@ -243,9 +243,13 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login' }) => {
 
           {mode === 'login' && (
             <div className="form-group" style={{ textAlign: 'right' }}>
-              <a href="#" style={{ color: 'var(--primary)', fontSize: '0.9rem' }}>
+              <button 
+                type="button" 
+                style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.9rem', cursor: 'pointer' }}
+                onClick={() => alert('Password reset link will be sent to your email.')}
+              >
                 Forgot password?
-              </a>
+              </button>
             </div>
           )}
 
@@ -266,9 +270,9 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login' }) => {
 
           <div className="form-footer">
             {mode === 'login' ? (
-              <>Don't have an account? <a href="#" onClick={() => handleSwitchMode('signup')}>Sign up</a></>
+              <>Don't have an account? <button type="button" style={{ background: 'none', border: 'none', color: 'var(--primary)', fontWeight: 500, cursor: 'pointer' }} onClick={() => handleSwitchMode('signup')}>Sign up</button></>
             ) : (
-              <>Already have an account? <a href="#" onClick={() => handleSwitchMode('login')}>Sign in</a></>
+              <>Already have an account? <button type="button" style={{ background: 'none', border: 'none', color: 'var(--primary)', fontWeight: 500, cursor: 'pointer' }} onClick={() => handleSwitchMode('login')}>Sign in</button></>
             )}
           </div>
         </form>
